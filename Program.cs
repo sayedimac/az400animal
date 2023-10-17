@@ -1,29 +1,27 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container.
+builder.Services.AddControllersWithViews();
 
-List<Animal> animals = new List<Animal>();
+var app = builder.Build();
 
-Animal dog = new Animal { Name = "Fido", Age = 3, Color = "Brown", Type = "Dog", Sound = "Bark" };
-Animal cat = new Animal { Name = "Whiskers", Age = 2, Color = "Gray", Type = "Cat", Sound = "Meow" };
-Animal bird = new Animal { Name = "Tweety", Age = 1, Color = "Yellow", Type = "Bird", Sound = "Tweet" };
-Animal pig = new Animal { Name = "Porky", Age = 4, Color = "Pink", Type = "Pig", Sound = "Oink" };
-animals.Add(dog);
-animals.Add(cat);
-animals.Add(bird);
-animals.Add(pig);
-
-foreach (Animal animal in animals)
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
 {
-Console.WriteLine($"The {animal.Type} named {animal.Name} is {animal.Age} years old, {animal.Color} in color, and says {animal.Sound}.");
+    app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
 }
 
-public class Animal
-{
-    public string Name { get; set; }
-    public int Age { get; set; }
-    public string Color { get; set; }
-    public string Type { get; set; }
-    public string Sound { get; set; }
+app.UseHttpsRedirection();
+app.UseStaticFiles();
 
-}
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.Run();
